@@ -1,0 +1,48 @@
+:root {
+  /* ── Cream Palette ── */
+  --color-bg: #F8F5F0;
+  --color-surface: #FFFDF9;
+  --color-peach: #F7D6D6;
+  --color-sage: #DDE8CF;
+  --color-gold: #F7E8B0;
+  --color-sky: #D8E7F5;
+  --color-caramel: #8B6B52;
+
+  /* ── Semantic ── */
+  --color-ink: #5D4E37;
+  --color-muted: #A89880;
+  --color-danger: #E8B4B4;
+  --color-success: #B8CFA8;
+
+  /* ── Radius ── */
+  --radius-sm: 12px;
+  --radius-md: 20px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
+  --radius-full: 9999px;
+
+  /* ── Shadows (caramel-tinted, never pure black) ── */
+  --shadow-sm: 0 2px 8px rgba(139, 107, 82, 0.06);
+  --shadow-md: 0 4px 20px rgba(139, 107, 82, 0.08);
+  --shadow-lg: 0 8px 40px rgba(139, 107, 82, 0.10);
+  --shadow-float: 0 6px 24px rgba(139, 107, 82, 0.07);
+
+  /* ── Typography ── */
+  --font-round: 'ZCOOL KuaiLe', 'Comic Sans MS', cursive, sans-serif;
+  --font-body: system-ui, -apple-system, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+
+  /* ── Spacing ── */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+
+  /* ── Transitions ── */
+  --ease-gentle: cubic-bezier(0.33, 0, 0.67, 1);
+  --duration-fast: 0.15s;
+  --duration-normal: 0.25s;
+  --duration-slow: 0.4s;
+}

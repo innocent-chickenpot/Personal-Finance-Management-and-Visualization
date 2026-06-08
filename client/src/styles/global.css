@@ -1,0 +1,236 @@
+@import url('https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&display=swap');
+
+/* ── Reset ── */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--color-bg);
+  color: var(--color-ink);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-round);
+  color: var(--color-ink);
+  text-wrap: balance;
+  letter-spacing: 0.02em;
+}
+
+a {
+  color: var(--color-caramel);
+  text-decoration: none;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-muted);
+  border-radius: var(--radius-full);
+}
+
+/* ═══════════════════════════════════════════
+   Element Plus Global Overrides
+   ═══════════════════════════════════════════ */
+
+:root {
+  --el-color-primary: #E0B9B9;
+  --el-color-primary-light-3: #E8C8C8;
+  --el-color-primary-light-5: #F0D7D7;
+  --el-color-primary-light-7: #F7E6E6;
+  --el-color-primary-light-9: #FDF5F5;
+  --el-color-primary-dark-2: #CC9999;
+  --el-color-success: #B8CFA8;
+  --el-color-warning: #E8D8A0;
+  --el-color-danger: #D4A0A0;
+  --el-color-info: #B8C8D8;
+
+  --el-border-radius-base: 20px;
+  --el-border-radius-small: 12px;
+  --el-border-radius-round: 24px;
+
+  --el-box-shadow-light: 0 4px 16px rgba(139, 107, 82, 0.08);
+  --el-box-shadow-lighter: 0 2px 8px rgba(139, 107, 82, 0.06);
+  --el-box-shadow: 0 8px 32px rgba(139, 107, 82, 0.10);
+
+  --el-font-family: var(--font-body);
+
+  --el-bg-color: #FFFDF9;
+  --el-bg-color-overlay: #FFFDF9;
+  --el-fill-color-blank: #FFFDF9;
+
+  --el-border-color: #E8E0D8;
+  --el-border-color-light: #F0EAE2;
+  --el-border-color-lighter: #F5F0EA;
+
+  --el-text-color-primary: #5D4E37;
+  --el-text-color-regular: #6B5D48;
+  --el-text-color-secondary: #A89880;
+  --el-text-color-placeholder: #B8A898;
+}
+
+/* ── Button ── */
+.el-button--primary {
+  --el-button-bg-color: var(--color-peach);
+  --el-button-border-color: transparent;
+  --el-button-hover-bg-color: #F0C4C4;
+  --el-button-hover-border-color: transparent;
+  --el-button-active-bg-color: #E8B4B4;
+  color: var(--color-caramel);
+  font-weight: 600;
+  border-radius: var(--radius-lg);
+  transition: all var(--duration-normal) var(--ease-gentle);
+}
+
+.el-button--primary:hover {
+  transform: scale(1.03);
+  box-shadow: var(--shadow-float);
+}
+
+/* ── Card ── */
+.el-card {
+  border-radius: var(--radius-lg) !important;
+  border: none !important;
+  box-shadow: var(--shadow-md) !important;
+  background: var(--color-surface) !important;
+}
+
+/* ── Table ── */
+.el-table {
+  --el-table-border-color: #F0EAE2;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--color-surface);
+}
+
+.el-table th.el-table__cell {
+  background: #FDF9F2;
+  color: var(--color-caramel);
+  font-weight: 600;
+  border-bottom: 2px solid #F0E8DC;
+}
+
+.el-table .el-table__row:hover > td {
+  background: #FDF9F2 !important;
+}
+
+/* ── Input / Select / DatePicker ── */
+.el-select .el-input__wrapper,
+.el-date-picker .el-input__wrapper,
+.el-input-number .el-input__wrapper,
+.el-input .el-input__wrapper {
+  border-radius: 20px !important;
+  box-shadow: 0 0 0 1px #E8E0D8 !important;
+  background: var(--color-surface) !important;
+  transition: all var(--duration-normal) var(--ease-gentle);
+}
+
+.el-select .el-input__wrapper:hover,
+.el-input:hover .el-input__wrapper,
+.el-input-number:hover .el-input__wrapper {
+  box-shadow: 0 0 0 1px var(--color-peach) !important;
+}
+
+.el-select .el-input.is-focus .el-input__wrapper,
+.el-input.is-focus .el-input__wrapper,
+.el-input-number.is-focus .el-input__wrapper {
+  box-shadow: 0 0 0 2px rgba(247, 214, 214, 0.6) !important;
+}
+
+/* ── Radio ── */
+.el-radio__input.is-checked .el-radio__inner {
+  background: var(--color-peach);
+  border-color: var(--color-peach);
+}
+
+.el-radio__input.is-checked + .el-radio__label {
+  color: var(--color-ink);
+}
+
+/* ── Tag ── */
+.el-tag--success {
+  background: var(--color-sage);
+  border-color: transparent;
+  color: #5A7A4A;
+  border-radius: var(--radius-sm);
+}
+
+.el-tag--danger {
+  background: var(--color-peach);
+  border-color: transparent;
+  color: #A06060;
+  border-radius: var(--radius-sm);
+}
+
+/* ── Pagination ── */
+.el-pagination .el-pager li.is-active {
+  background: var(--color-peach);
+  color: var(--color-caramel);
+  border-radius: 12px;
+  font-weight: 600;
+}
+
+.el-pagination .el-pager li:hover {
+  color: var(--color-caramel);
+}
+
+.el-pagination button:hover {
+  color: var(--color-caramel);
+}
+
+/* ── Link ── */
+.el-button.is-link {
+  color: var(--color-caramel);
+}
+
+.el-link.el-link--primary {
+  --el-link-text-color: var(--color-caramel);
+}
+
+/* ── Dialog / MessageBox ── */
+.el-dialog {
+  border-radius: var(--radius-lg);
+}
+
+.el-message-box {
+  border-radius: var(--radius-lg);
+}
+
+/* ── Alert ── */
+.el-alert {
+  border-radius: var(--radius-md);
+  border: none;
+}
+
+/* ── Menu ── */
+.el-menu {
+  border-right: none !important;
+  background: transparent;
+}
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
