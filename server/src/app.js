@@ -10,6 +10,7 @@ const paymentMethodRoutes = require('./routes/paymentMethods')
 const statsRoutes = require('./routes/stats')
 const savingsJarRoutes = require('./routes/savingsJars')
 const budgetRoutes = require('./routes/budgets')
+const categoryMappingRoutes = require('./routes/categoryMappings')
 const errorHandler = require('./middleware/errorHandler')
 
 const prisma = new PrismaClient({})
@@ -28,6 +29,7 @@ app.use('/api/payment-methods', paymentMethodRoutes)
 app.use('/api/stats', statsRoutes)
 app.use('/api/savings-jars', savingsJarRoutes)
 app.use('/api/budgets', budgetRoutes)
+app.use('/api/category-mappings', categoryMappingRoutes)
 
 app.use(errorHandler)
 

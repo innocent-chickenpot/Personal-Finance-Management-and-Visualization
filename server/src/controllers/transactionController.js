@@ -138,4 +138,148 @@ async function remove(req, res, next) {
   }
 }
 
-module.exports = { list, create, update, remove }
+const { parseBillFiles } = require('../services/billParser')
+
+async function parseBill(req, res, next) {
+  try {
+    const prisma = getPrisma(req)
+
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ code: 400, message: '请上传账单文件' })
+    }
+
+    // Parse files
+    const { records, errors } = parseBillFiles(req.files)
+
+    // Load user's category mapping rules
+    const mappings = await prisma.categoryMapping.findMany({
+      where: { userId: req.userId },
+      include: { category: { select: { id: true, name: true } } }
+    })
+    const mappingMap = {}
+    mappings.forEach(m => {
+      const key = `${m.source}:${m.sourceName}`
+      mappingMap[key] = m.category
+    })
+
+    // Check for duplicates and match categories
+    const existingIds = new Set()
+    const allSourceIds = records.filter(r => r.sourceTransactionId).map(r => r.sourceTransactionId)
+
+    const existing = await prisma.transaction.findMany({
+      where: {
+        userId: req.userId,
+        sourceTransactionId: { in: allSourceIds }
+      },
+      select: { sourceTransactionId: true }
+    })
+    existing.forEach(e => existingIds.add(e.sourceTransactionId))
+
+    // Build preview records
+    const preview = records.map(r => {
+      const isDuplicate = r.sourceTransactionId && existingIds.has(r.sourceTransactionId)
+      const mapKey = `${r.source}:${r.sourceCategory}`
+      const matched = mappingMap[mapKey] || null
+
+      return {
+        sourceTransactionId: r.sourceTransactionId || '',
+        source: r.source,
+        sourceCategory: r.sourceCategory,
+        transactionDate: r.transactionDate,
+        type: r.type,
+        amount: r.amount,
+        counterparty: r.counterparty,
+        product: r.product,
+        paymentMethod: r.paymentMethod,
+        note: r.note,
+        status: isDuplicate ? 'duplicate' : 'new',
+        matchedCategoryId: matched ? matched.id : null,
+        matchedCategoryName: matched ? matched.name : null
+      }
+    })
+
+    const summary = {
+      total: preview.length,
+      newCount: preview.filter(p => p.status === 'new').length,
+      duplicateCount: preview.filter(p => p.status === 'duplicate').length
+    }
+
+    res.json({ code: 200, data: { records: preview, summary, errors } })
+  } catch (err) {
+    next(err)
+  }
+}
+
+async function importParsed(req, res, next) {
+  try {
+    const prisma = getPrisma(req)
+    const { records } = req.body
+
+    if (!Array.isArray(records) || records.length === 0) {
+      return res.status(400).json({ code: 400, message: '请选择要导入的记录' })
+    }
+
+    // Get a default payment method — use the first available or create "其他"
+    let defaultPM = await prisma.paymentMethod.findFirst({
+      where: { userId: req.userId, isPreset: true, name: '其他' }
+    })
+    if (!defaultPM) {
+      defaultPM = await prisma.paymentMethod.findFirst({
+        where: { userId: req.userId }
+      })
+    }
+
+    let imported = 0
+    let skipped = 0
+
+    for (const r of records) {
+      // Check duplicates again
+      if (r.sourceTransactionId) {
+        const exists = await prisma.transaction.findFirst({
+          where: {
+            userId: req.userId,
+            sourceTransactionId: r.sourceTransactionId
+          }
+        })
+        if (exists) {
+          skipped++
+          continue
+        }
+      }
+
+      if (!r.categoryId) {
+        // Fallback to "其他" category
+        const otherCategory = await prisma.category.findFirst({
+          where: { userId: req.userId, type: r.type || 'expense', isPreset: true, name: '其他' }
+        })
+        if (otherCategory) r.categoryId = otherCategory.id
+      }
+
+      if (!r.categoryId) {
+        skipped++
+        continue
+      }
+
+      await prisma.transaction.create({
+        data: {
+          userId: req.userId,
+          type: r.type || 'expense',
+          amount: Number(r.amount),
+          categoryId: Number(r.categoryId),
+          paymentMethodId: Number(r.paymentMethodId || defaultPM?.id || 1),
+          transactionDate: new Date(r.transactionDate + 'T00:00:00'),
+          note: r.note || null,
+          sourceTransactionId: r.sourceTransactionId || null,
+          source: r.source || null
+        }
+      })
+      imported++
+    }
+
+    res.json({ code: 200, data: { imported, skipped } })
+  } catch (err) {
+    next(err)
+  }
+}
+
+module.exports = { list, create, update, remove, parseBill, importParsed }

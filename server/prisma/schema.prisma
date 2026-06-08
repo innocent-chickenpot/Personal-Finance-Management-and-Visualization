@@ -16,8 +16,9 @@ model User {
   transactions    Transaction[]
   categories      Category[]
   paymentMethods  PaymentMethod[]
-  budgets         Budget[]
-  savingsJars     SavingsJar[]
+  budgets          Budget[]
+  savingsJars      SavingsJar[]
+  categoryMappings CategoryMapping[]
 
   @@map("users")
 }
@@ -29,8 +30,9 @@ model Category {
   name         String
   isPreset     Boolean       @default(false) @map("is_preset")
   createdAt    DateTime      @default(now()) @map("created_at")
-  user         User?         @relation(fields: [userId], references: [id])
-  transactions Transaction[]
+  user             User?             @relation(fields: [userId], references: [id])
+  transactions     Transaction[]
+  categoryMappings CategoryMapping[]
 
   @@map("categories")
 }
@@ -59,11 +61,27 @@ model Transaction {
   note            String?       @db.Text
   transactionDate DateTime      @map("transaction_date") @db.Date
   createdAt       DateTime      @default(now()) @map("created_at")
-  user            User          @relation(fields: [userId], references: [id])
-  category        Category      @relation(fields: [categoryId], references: [id])
-  paymentMethod   PaymentMethod @relation(fields: [paymentMethodId], references: [id])
+  sourceTransactionId String?   @map("source_transaction_id") @db.VarChar(128)
+  source              String?   @db.VarChar(20)
+  user                User      @relation(fields: [userId], references: [id])
+  category            Category  @relation(fields: [categoryId], references: [id])
+  paymentMethod       PaymentMethod @relation(fields: [paymentMethodId], references: [id])
 
   @@map("transactions")
+}
+
+model CategoryMapping {
+  id         Int      @id @default(autoincrement())
+  userId     Int      @map("user_id")
+  source     String   @db.VarChar(20)
+  sourceName String   @map("source_name") @db.VarChar(100)
+  categoryId Int      @map("category_id")
+  createdAt  DateTime @default(now()) @map("created_at")
+  user       User     @relation(fields: [userId], references: [id])
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  @@unique([userId, source, sourceName])
+  @@map("category_mappings")
 }
 
 model Budget {

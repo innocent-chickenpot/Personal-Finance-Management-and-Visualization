@@ -36,6 +36,18 @@ const routes = [
     name: 'TransactionEdit',
     component: () => import('@/views/TransactionForm.vue'),
     meta: { requiresAuth: true }
+  },
+  {
+    path: '/import',
+    name: 'ImportBill',
+    component: () => import('@/views/ImportBill.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/settings/mappings',
+    name: 'CategoryMappings',
+    component: () => import('@/views/CategoryMappings.vue'),
+    meta: { requiresAuth: true }
   }
 ]
 
